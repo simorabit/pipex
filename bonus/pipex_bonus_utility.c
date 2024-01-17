@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:24 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/01/17 11:19:47 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/01/17 12:07:17 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char *check_env(char *cmd, char **env)
     char    *newcmd;
     
     i = 0;
-    if (*env == NULL)
+    if (*env == NULL || cmd == NULL)
         (perror("PATH not found"), exit(EXIT_FAILURE));
     while (env[i])
     {
@@ -66,14 +66,12 @@ char *check_env(char *cmd, char **env)
             break;
         i++;
     }
-   
     if (path == NULL)
         (perror("PATH not found"), exit(EXIT_FAILURE));
     all_paths = ft_split(path + 5, ':');
     if (!all_paths)
         return (NULL);
     i = 0;
-    
     while (all_paths[i])
     {
         newcmd = ft_strjoin("/", cmd);
@@ -85,8 +83,7 @@ char *check_env(char *cmd, char **env)
         if (access(result, F_OK | X_OK) == 0)
             return (free_cmd(all_paths), free(newcmd), result);
         i++;
-        free(newcmd);
-        free(result);
+        (free(newcmd), free(result));
     }
     return (free_cmd(all_paths), NULL);
 }
@@ -95,34 +92,28 @@ char **get_command_paths(char *arv[], char **env, int argc)
 {
     int i;
     int j;
-    int max;
     char **cmds;
     int files;
     char **mcmd;
     
     i = 0;
     if (!ft_strncmp(arv[1], "here_doc", 9))
-    {
-        j = 3;
-        max = 4;
-        files = 4;
-    }
+        (j = 3, files = 4);
     else
-        (j = 2, max = 3, files = 3);
-    cmds = malloc(sizeof(char *) * (argc - max + 1));
+        (j = 2, files = 3);
+    cmds = malloc(sizeof(char *) * (argc - files + 1));
     if (!cmds)
         (exit(EXIT_FAILURE));
     while (i < argc - files)
     {
         mcmd = ft_split(arv[j++], ' ');
         if (!mcmd)
-            (exit(EXIT_FAILURE));
+            (free(cmds), exit(EXIT_FAILURE));
         cmds[i] = check_env(mcmd[0], env);
         if (cmds[i] == NULL)
-            (free_cmd(cmds), free_cmd(mcmd), ft_putstr_fd("command not found", 0), exit(EXIT_FAILURE));
+            (ft_putstr_fd("command not found", 0), free_cmd(cmds), free_cmd(mcmd),exit(EXIT_FAILURE));
+        free_cmd(mcmd);
         i++;
     }
-    cmds[i] = NULL;
-    free_cmd(mcmd);
-    return (cmds);
+    return (cmds[i] = NULL, cmds);
 }

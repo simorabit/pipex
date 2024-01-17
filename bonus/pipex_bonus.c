@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:27 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/01/17 11:20:29 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/01/17 11:55:39 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void free_cmd(char **cmds)
 
 static void execute(char *path, char *cmd)
 {
-    char **s_cmd;
-    
+    char **s_cmd = NULL;
     s_cmd = ft_split(cmd, ' ');
     if (!s_cmd)
-        (free_cmd(s_cmd), exit(EXIT_FAILURE));
+        (free(cmd), exit(EXIT_FAILURE));
     if (execve(path, s_cmd, NULL) == -1)
     {
         free_cmd(s_cmd);
+        free(cmd);
         perror("Error in execve for command2");
         exit(EXIT_FAILURE);
     }
@@ -66,21 +66,21 @@ static void manage_pipe(char *path, char *cmd)
     int p_fd[2];
 
     if (pipe(p_fd) == -1)
-        (perror("pipe"), exit(EXIT_FAILURE));
+        (free(cmd), perror("pipe"), exit(EXIT_FAILURE));
     pid = fork();
     if (pid == -1)
-        exit(EXIT_FAILURE);
+        free(cmd), exit(EXIT_FAILURE);
     if (!pid)
     {
         close(p_fd[0]);
         if (dup2(p_fd[1], STDOUT_FILENO) == -1)
-            (perror("Error in dup2"), exit(EXIT_FAILURE));
+            (free(cmd), perror("Error in dup2"), exit(EXIT_FAILURE));
         close(p_fd[1]);
         execute(path, cmd);
     }
     close(p_fd[1]);
     if (dup2(p_fd[0], STDIN_FILENO) == -1)
-        (perror("Error in dup2"), exit(EXIT_FAILURE));
+        (free(cmd), perror("Error in dup2"), exit(EXIT_FAILURE));
     close(p_fd[0]);
 }
 
