@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:27 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/01/17 10:10:29 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/01/17 11:20:29 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void free_cmd(char **cmds)
     int i;
     
     i = 0;
-    while (cmds[i] != 0)
+    while (cmds[i] != NULL)
     {
         free(cmds[i]);
         i++;
@@ -122,10 +122,10 @@ int open_file(int is_heredoc, char **arv)
     return fd_in;
 }
 
-// void    f()
-// {
-    
-// }
+void    f()
+{
+    system("leaks pipex_bonus");
+}
 
 int main(int argc, char *arv[], char **env)
 {
@@ -133,10 +133,10 @@ int main(int argc, char *arv[], char **env)
     int i;
     int j;
 
-    // atexit(f);
+    atexit(f);
     char **cmds;
     int is_heredoc;
-
+    (void)env;
     is_heredoc = 0;
     if (argc < 5)
         (ft_putstr_fd("argument required is 4", 0), exit(EXIT_FAILURE));
@@ -158,5 +158,4 @@ int main(int argc, char *arv[], char **env)
     close(STDIN_FILENO);
     while (++i < argc - 3)
         wait(NULL);
-    system("leaks pipex_bonus");
 }

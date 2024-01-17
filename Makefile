@@ -6,13 +6,13 @@
 #    By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/16 17:30:31 by mal-mora          #+#    #+#              #
-#    Updated: 2024/01/16 20:35:14 by mal-mora         ###   ########.fr        #
+#    Updated: 2024/01/17 11:20:05 by mal-mora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 HEADER = pipex.h pipex_bonus.h
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror
 
 SRCS_BONUS	=	bonus/pipex_bonus.c bonus/pipex_bonus_utility.c \
 				bonus/ft_split.c \

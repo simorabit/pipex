@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:24 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/01/17 10:10:11 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/01/17 11:19:47 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char *check_env(char *cmd, char **env)
         (perror("PATH not found"), exit(EXIT_FAILURE));
     while (env[i])
     {
-        path = ft_strnstr(env[i], "PATH", 89);
+        path = ft_strnstr(env[i], "PATH", 100);
         if (path)
             break;
         i++;
@@ -109,7 +109,7 @@ char **get_command_paths(char *arv[], char **env, int argc)
     }
     else
         (j = 2, max = 3, files = 3);
-    cmds = malloc(sizeof(char *) * (argc - max));
+    cmds = malloc(sizeof(char *) * (argc - max + 1));
     if (!cmds)
         (exit(EXIT_FAILURE));
     while (i < argc - files)
@@ -122,6 +122,7 @@ char **get_command_paths(char *arv[], char **env, int argc)
             (free_cmd(cmds), free_cmd(mcmd), ft_putstr_fd("command not found", 0), exit(EXIT_FAILURE));
         i++;
     }
+    cmds[i] = NULL;
     free_cmd(mcmd);
     return (cmds);
 }
