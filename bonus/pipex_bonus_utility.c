@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:24 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/01/17 12:07:17 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:23:17 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,75 +45,31 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 		i++;
 		haystack++;
 	}
-	return (NULL); 
+	return (NULL);
 }
 
-char *check_env(char *cmd, char **env)
+int	open_file(int is_heredoc, char **arv)
 {
-    int     i;
-    char    *path;
-    char    **all_paths;
-    char    *result;
-    char    *newcmd;
-    
-    i = 0;
-    if (*env == NULL || cmd == NULL)
-        (perror("PATH not found"), exit(EXIT_FAILURE));
-    while (env[i])
-    {
-        path = ft_strnstr(env[i], "PATH", 100);
-        if (path)
-            break;
-        i++;
-    }
-    if (path == NULL)
-        (perror("PATH not found"), exit(EXIT_FAILURE));
-    all_paths = ft_split(path + 5, ':');
-    if (!all_paths)
-        return (NULL);
-    i = 0;
-    while (all_paths[i])
-    {
-        newcmd = ft_strjoin("/", cmd);
-        if (!newcmd)
-            (free_cmd(all_paths), exit(EXIT_FAILURE));
-        result = ft_strjoin(all_paths[i], newcmd);
-        if (!result)
-            (free_cmd(all_paths), free(newcmd), exit(EXIT_FAILURE));
-        if (access(result, F_OK | X_OK) == 0)
-            return (free_cmd(all_paths), free(newcmd), result);
-        i++;
-        (free(newcmd), free(result));
-    }
-    return (free_cmd(all_paths), NULL);
+	int	fd_in;
+
+	if (is_heredoc == 1)
+		fd_in = open("test.txt", O_CREAT | O_RDWR | O_APPEND, 0644);
+	else
+		fd_in = open(arv[1], O_RDONLY, 0777);
+	if (fd_in == -1)
+		(perror("Error in open file"), exit(EXIT_FAILURE));
+	return (fd_in);
 }
 
-char **get_command_paths(char *arv[], char **env, int argc)
+void	free_cmd(char **cmds)
 {
-    int i;
-    int j;
-    char **cmds;
-    int files;
-    char **mcmd;
-    
-    i = 0;
-    if (!ft_strncmp(arv[1], "here_doc", 9))
-        (j = 3, files = 4);
-    else
-        (j = 2, files = 3);
-    cmds = malloc(sizeof(char *) * (argc - files + 1));
-    if (!cmds)
-        (exit(EXIT_FAILURE));
-    while (i < argc - files)
-    {
-        mcmd = ft_split(arv[j++], ' ');
-        if (!mcmd)
-            (free(cmds), exit(EXIT_FAILURE));
-        cmds[i] = check_env(mcmd[0], env);
-        if (cmds[i] == NULL)
-            (ft_putstr_fd("command not found", 0), free_cmd(cmds), free_cmd(mcmd),exit(EXIT_FAILURE));
-        free_cmd(mcmd);
-        i++;
-    }
-    return (cmds[i] = NULL, cmds);
+	int	i;
+
+	i = 0;
+	while (cmds[i] != NULL)
+	{
+		free(cmds[i]);
+		i++;
+	}
+	free(cmds);
 }

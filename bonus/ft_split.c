@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "pipex_bonus.h"
+
 static int	count_words(char *s, char c)
 {
 	int	counter;
@@ -91,9 +91,9 @@ char	**ft_split(char const *s, char c)
 
 void	ft_putstr_fd(char *str, int fd)
 {
-    int i;
+	int	i;
 
-    i = 0;
+	i = 0;
 	while (str[i])
 	{
 		write(fd, &str[i], 1);

@@ -6,7 +6,7 @@
 #    By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/16 17:30:31 by mal-mora          #+#    #+#              #
-#    Updated: 2024/01/17 11:42:07 by mal-mora         ###   ########.fr        #
+#    Updated: 2024/01/17 15:03:45 by mal-mora         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRCS_BONUS	=	bonus/pipex_bonus.c bonus/pipex_bonus_utility.c \
 				bonus/ft_split.c \
+				bonus/get_command_paths.c \
 				bonus/get_next_line/get_next_line.c \
 				bonus/get_next_line/get_next_line_utils.c
 

@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 16:00:29 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/01/13 13:10:17 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/02/04 17:20:24 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,5 @@ char	*ft_strjoin(char *s1, char *s2)
 	ptr = ft_strcpy(result, s1);
 	ptr = ft_strcpy(result + s1_len, s2);
 	*(ptr + s2_len) = '\0';
-	//free(s2);
 	return (result);
 }

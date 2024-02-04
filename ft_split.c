@@ -6,12 +6,12 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:15 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/01/12 21:30:16 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/02/04 16:15:50 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "pipex.h"
+
 static int	count_words(char *s, char c)
 {
 	int	counter;
@@ -79,7 +79,7 @@ char	**ft_split(char const *s, char c)
 		{
 			array[j] = ft_word((char *)s, c, array, j);
 			if (array[j] == NULL)
-				return (free(array),NULL);
+				return (free(array), NULL);
 			j++;
 		}
 		while (*s && *s != c)
@@ -88,14 +88,27 @@ char	**ft_split(char const *s, char c)
 	array[j] = 0;
 	return (array);
 }
+
 void	ft_putstr_fd(char *str, int fd)
 {
-    int i;
+	int	i;
 
-    i = 0;
+	i = 0;
 	while (str[i])
 	{
 		write(fd, &str[i], 1);
 		i++;
 	}
+}
+
+void	free_cmd(char **cmds)
+{
+	int	i;
+
+	i = 0;
+	while (cmds[i])
+	{
+		free(cmds[i++]);
+	}
+	free(cmds);
 }
