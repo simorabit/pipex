@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:01 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/02/04 15:53:00 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/02/12 18:01:32 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	process_first_command(char *path, int *pip_fd, char *file1, char *cmd1)
 	close(pip_fd[0]);
 	fd_file1 = open(file1, O_RDONLY);
 	if (fd_file1 == -1)
-		(perror(file1), exit(EXIT_FAILURE));
+		(perror("error in file1"), exit(EXIT_FAILURE));
 	if (dup2(fd_file1, STDIN_FILENO) == -1)
 		(perror("Error in dup2"), exit(EXIT_FAILURE));
 	if (dup2(pip_fd[1], STDOUT_FILENO) == -1)
@@ -120,18 +120,18 @@ int	main(int argc, char *arv[], char **env)
 
 	if (argc != 5)
 		(ft_putstr_fd("argument required is 4", 0), exit(EXIT_FAILURE));
-	if (!env)
-		exit(EXIT_FAILURE);
+	if (!*env)
+		(perror("Error in env"), exit(EXIT_FAILURE));
 	path1 = ft_split(arv[2], ' ');
 	path2 = ft_split(arv[3], ' ');
 	if (!path1 || !path2)
 		(ft_putstr_fd("path not found", 0), exit(EXIT_FAILURE));
-	cmd1 = check_env(path1[0], env);
-	cmd2 = check_env(path2[0], env);
+	cmd1 = get_cmd(path1, env);
+	cmd2 = get_cmd(path2, env);
 	if (!cmd1 || !cmd2)
 		(ft_putstr_fd("path not found", 0), exit(EXIT_FAILURE));
 	process_pipes(cmd1, cmd2, arv);
 	(wait(NULL), wait(NULL));
 	(free_cmd(path1), free_cmd(path2));
-	return (0);
+	return (1);
 }

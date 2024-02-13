@@ -6,7 +6,7 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:27 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/02/04 16:43:47 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/02/13 19:37:59 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	manage_pipe(char *path, char *cmd)
 	close(p_fd[0]);
 }
 
-static int	handel_here_doc(char *arv[])
+static int	handel_here_doc(int argc, char *arv[])
 {
 	int		fd_in;
 	char	*line;
@@ -83,7 +83,9 @@ static int	handel_here_doc(char *arv[])
 
 	i = 3;
 	j = 0;
-	fd_in = open("test.txt", O_CREAT | O_RDWR | O_APPEND, 0644);
+	if (argc < 6)
+		(ft_putstr_fd("required 6 arg", 1), exit(EXIT_FAILURE));
+	fd_in = open("/tmp/test.txt", O_CREAT | O_RDWR | O_APPEND, 0644);
 	if (fd_in == -1)
 		(perror("Error in open file"), exit(EXIT_FAILURE));
 	line = get_next_line(0);
@@ -94,8 +96,13 @@ static int	handel_here_doc(char *arv[])
 		free(line);
 		line = get_next_line(0);
 	}
-	(free(limiter), free(line), close(fd_in));
+	(free(line), free(limiter), close(fd_in));
 	return (1);
+}
+
+void	v()
+{
+	system("leaks pipex_bonus");
 }
 
 int	main(int argc, char *arv[], char **env)
@@ -106,11 +113,12 @@ int	main(int argc, char *arv[], char **env)
 	char	**cmds;
 	int		is_heredoc;
 
+	atexit(v);
 	is_heredoc = 0;
 	if (argc < 5)
 		(ft_putstr_fd("required 4 arg", 0), exit(EXIT_FAILURE));
 	if (!ft_strncmp(arv[1], "here_doc", 9))
-		is_heredoc = handel_here_doc(arv);
+		is_heredoc = handel_here_doc(argc, arv);
 	i = 2 + is_heredoc;
 	j = 0;
 	cmds = get_command_paths(arv, env, argc);
@@ -121,8 +129,9 @@ int	main(int argc, char *arv[], char **env)
 	while (i < argc - 2)
 		manage_pipe(cmds[j++], arv[i++]);
 	if (i == argc - 2)
-		write_in_file2(cmds[j], arv, argc, is_heredoc);
-	(free_cmd(cmds), i = -1, close(STDIN_FILENO), unlink("test.txt"));
+		write_in_file2(cmds[j - 1], arv, argc, is_heredoc);
+	(free_cmd(cmds), i = -1, close(STDIN_FILENO), unlink("/tmp/test.txt"));
 	while (++i < argc - 3)
 		wait(NULL);
+	exit(0);
 }

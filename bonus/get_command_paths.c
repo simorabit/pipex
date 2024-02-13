@@ -6,13 +6,13 @@
 /*   By: mal-mora <mal-mora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 21:30:24 by mal-mora          #+#    #+#             */
-/*   Updated: 2024/02/04 17:14:27 by mal-mora         ###   ########.fr       */
+/*   Updated: 2024/02/13 11:51:24 by mal-mora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
-char	*get_path(char **env)
+static char	*get_path(char **env)
 {
 	int		i;
 	char	*path;
@@ -29,7 +29,7 @@ char	*get_path(char **env)
 	return (NULL);
 }
 
-char	*check_all_path(char *path, char *cmd)
+static char	*check_all_path(char *path, char *cmd)
 {
 	char	*result;
 	char	*newcmd;
@@ -68,22 +68,32 @@ char	*check_env(char *cmd, char **env)
 	return (free_cmd(all_paths), NULL);
 }
 
+static int	is_her_doc(char *arv)
+{
+	int	n;
+
+	if (!ft_strncmp(arv, "here_doc", 9))
+		n = 4;
+	else
+		n = 3;
+	return (n);
+}
+
 char	**get_command_paths(char *arv[], char **env, int argc)
 {
 	int		i;
 	int		j;
 	char	**cmds;
 	char	**mcmd;
+	int		n;
 
 	i = -1;
-	if (!ft_strncmp(arv[1], "here_doc", 9))
-		j = 3;
-	else
-		j = 2;
+	n = is_her_doc(arv[1]);
+	j = n - 1;
 	cmds = malloc(sizeof(char *) * (argc - j + 2));
 	if (!cmds)
 		(exit(EXIT_FAILURE));
-	while (++i < argc - j + 1)
+	while (++i < argc - n)
 	{
 		mcmd = ft_split(arv[j++], ' ');
 		if (!mcmd)
